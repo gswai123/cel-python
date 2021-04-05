@@ -719,10 +719,10 @@ Examples: image-age False
 
 
 #######
-# event
+# Event
 #######
 
-Scenario Outline: Lambda resources have an associated Cloud Trail event resource.
+Scenario Outline: Lambda resources have an associated Cloud Trail Event resource.
     We only provide the barest minimum of an event-like document to mock C7N's event details.
 
     Given policy text
@@ -754,7 +754,7 @@ Examples: image-age False
 
 # get_raw_metrics isn't tested directly, since it's not clear it needs to be exposed.
 
-Scenario Outline: resources have associated CloudWatch metrics and metrics statistics.
+Scenario Outline: Resources have associated CloudWatch metrics and metrics statistics.
     We only provide the barest minimum of an event-like document to mock C7N's event details.
 
     Given policy text

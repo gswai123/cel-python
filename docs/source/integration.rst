@@ -229,6 +229,36 @@ Here's the Python version::
     >>> result
     "Hello world! Nice to meet you, I'm CEL.\\n"
 
+The Issue #10 Example
+----------------------
+
+See https://github.com/cloud-custodian/cel-python/issues/10
+
+Here's the code sample from this issue::
+
+    >>> import celpy
+    >>> import celpy.celtypes
+
+    >>> cel_source = """
+    ... shake_hands_10()
+    ... """
+
+    >>> env = celpy.Environment()
+    >>> ast = env.compile(cel_source)
+
+    >>> def shake_hands_10(*args, **kwargs) -> celpy.celtypes.StringType:
+    ...     return celpy.celtypes.StringType(f"call shake_hands")
+
+    >>> prgm = env.program(ast, functions=[shake_hands_10])
+    >>> activation = {}
+
+    >>> result = prgm.evaluate(activation)
+    >>> print(result)
+    call shake_hands
+
+This uncovered an issue in decomposing the ``ident_dot_arg`` production in Lark.
+It's included here to show that the issue is resulved.
+
 Define custom global function
 -----------------------------
 
@@ -500,6 +530,7 @@ The ``cel_program`` in the above example is an executable CEL program wrapped in
 ::
 
     >>> import celpy
+    >>> import celpy.c7nlib
     >>> import datetime
     >>> cel_functions = {}
 
@@ -507,17 +538,18 @@ The ``cel_program`` in the above example is an executable CEL program wrapped in
     ...     def __call__(self, resource):
     ...         raise NotImplementedError
     ...
-    >>> class CelFilter(Filter):
+    >>> class CELFilter(Filter):
     ...     env = celpy.Environment()
-    ...     def __init__(self, object):
-    ...         assert object["type"] == "cel", "Can't create CelFilter without filter: - type: \"cel\""
-    ...         assert "expr" in object, "Can't create CelFilter without filter: - expr: \"CEL expression\""
-    ...         ast = self.env.compile(object["expr"])
+    ...     def __init__(self, data, manager):
+    ...         assert data["type"].lower() == "cel", "Can't create CELFilter without filter: - type: \"cel\""
+    ...         assert "expr" in data, "Can't create CELFilter without filter: - expr: \"CEL expression\""
+    ...         ast = self.env.compile(data["expr"])
     ...         self.prgm = self.env.program(ast, cel_functions)
     ...     def __call__(self, resource):
     ...         now = datetime.datetime.utcnow()
     ...         activation = {"resource": celpy.json_to_cel(resource), "now": celpy.celtypes.TimestampType(now)}
-    ...         return bool(self.prgm.evaluate(activation))
+    ...         with celpy.c7nlib.C7NContext(filter=self):
+    ...             return bool(self.prgm.evaluate(activation))
 
     >>> tag_policy = {
     ...     "filter": {
@@ -530,13 +562,13 @@ The ``cel_program`` in the above example is an executable CEL program wrapped in
     ...     {"name": "bad1", "tags": {"not-owner": "oops"}},
     ...     {"name": "bad2", "tags": {"owner": None}},
     ... ]
-    >>> tag_policy_filter = CelFilter(tag_policy["filter"])
+    >>> tag_policy_filter = CELFilter(tag_policy["filter"], None)
     >>> actionable = list(filter(tag_policy_filter, resources))
     >>> actionable
     [{'name': 'bad1', 'tags': {'not-owner': 'oops'}}, {'name': 'bad2', 'tags': {'owner': None}}]
 
 
-C7N Filter and Resource Types
+C7N Extension Functions
 -------------------------------
 
 There are several parts to handling the various kinds of C7N filters in use.
@@ -551,24 +583,6 @@ There are several parts to handling the various kinds of C7N filters in use.
     All of these, similarly, need to provide CEL values as part of the resource object.
     These classes can also provide additional resource-specific CEL functions used for evaluation.
 
-The atomic filter clauses have two general forms:
-
--   Those with "op". These expose a resource attribute value,
-    a filter comparison value, and an operator.
-    For example, ``resource.creationTimestamp < timestamp("2018-08-03T16:00:00-07:00")``.
-
--   Those without "op". These tests are based on a boolean function embedded in the C7N resource definition class.
-    For example, ``! resource.deleteProtection`` could rely on a attribute with a complex
-    value computed from one or more resource attribute values.
-
-The breakdown of ``filter`` rules in the C7N policy schema has the following counts.
-
-..  csv-table::
-
-    :header: category, count, notes
-    "('Common', 'Op')",21,"Used for more than one resource type, exposes resource details to CEL"
-    "('Common', 'No-Op')",15,"Used for more than one resource type, does not expose resource details"
-    "('Singleton', 'Op')",27,"Used for exactly one resource type, exposes resource details to CEL"
-    "('Singleton', 'No-Op')",47,"Used for exactly one resource type, does not expose resource details"
-
-(This is based on cloud-custodian-0.8.40.0, newer versions may have slighyly different numbers.)
+The general approach is to populate the environment with a number of functions that
+reach into C7N to extract information that's not directly available in the resource description.
+See :ref:`c7n_functions` for the complete analysis of how C7N integration works in detail.

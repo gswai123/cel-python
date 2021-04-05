@@ -1499,7 +1499,7 @@ class C7N_Interpreted_Runner(InterpretedRunner):
     ..  todo: Refactor to be a mixin to the Runner class hierarchy.
     """
 
-    def evaluate(self, context: Context, filter: Optional[Any] = None) -> Result:
+    def evaluate(self, context: Context, filter: Optional[Any] = None) -> celtypes.Value:
         e = Evaluator(
             ast=self.ast,
             activation=self.new_activation(context),

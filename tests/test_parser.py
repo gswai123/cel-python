@@ -20,7 +20,7 @@ Test Parser Features
 
 -   Literals
 
--   Aggregates
+-   Aggregates1
 
 TODO: Test *all* production rules separately here.
 
@@ -397,8 +397,10 @@ def test_error_text(parser):
         exc_info.value.args[0], exc_info.value.line, exc_info.value.column
     )
     assert lines.splitlines() == [
-        "ERROR: <input>:1:7 Unexpected token Token(RPAR, ')') at line 1, column 7.",
-        "    | nope*()/-+",
+        "ERROR: <input>:1:7 nope*()/-+",
+        '      ^',
+        '',
+        '    | nope*()/-+',
         "    | ......^",
     ]
 
