@@ -865,6 +865,60 @@ def get_related_subnets(resource: celtypes.MapType,) -> celtypes.Value:
     return json_to_cel(subnets)
 
 
+def get_cross_account_policies(resource: celtypes.MapType,) -> celtypes.MapType:
+    """
+    Reach into C7N and make a get_cross_account_policies() request using the current C7N filter.
+    """
+    cross_accounts = C7N.filter.get_cross_account_policies(resource)
+    return json_to_cel(cross_accounts)
+
+
+def get_accounts_cross_account_access(resource: celtypes.MapType, accounts: celtypes.Value,) -> celtypes.Value:
+    """
+    Reach into C7N and make a get_accounts_cross_account_access() request using the current C7N filter.
+    """
+    accounts = C7N.filter.get_accounts_cross_account_access(resource, accounts)
+    return json_to_cel(accounts)
+
+
+def get_vpcs_cross_account_access(resource: celtypes.MapType, vpcs: celtypes.Value,) -> celtypes.Value:
+    """
+    Reach into C7N and make a get_vpcs_cross_account_access() request using the current C7N filter.
+    """
+    vpcs = C7N.filter.get_vpcs_cross_account_access(resource, vpcs)
+    return json_to_cel(vpcs)
+
+
+def get_vpces_cross_account_access(resource: celtypes.MapType, vpces: celtypes.Value,) -> celtypes.Value:
+    """
+    Reach into C7N and make a get_vpces_cross_account_access() request using the current C7N filter.
+    """
+    vpces = C7N.filter.get_vpces_cross_account_access(resource, vpces)
+    return json_to_cel(vpces)
+
+
+def get_orgid_cross_account_access(resource: celtypes.MapType, orgids: celtypes.Value,) -> celtypes.Value:
+    """
+    Reach into C7N and make a get_orgid_cross_account_access() request using the current C7N filter.
+    """
+    orgids = C7N.filter.get_orgid_cross_account_access(resource, orgids)
+    return json_to_cel(orgids)
+
+
+def get_ami_cross_account_violations(resource: celtypes.MapType, accounts: celtypes.Value,) -> celtypes.Value:
+    """
+    Reach into C7n and make a get_ami_cross_account_violations() request using the current C7N filter.
+    """
+    accounts = C7N.filter.get_ami_cross_account_violations(resource, accounts)
+    return json_to_cel(accounts)
+
+def get_snapshot_cross_account_violations(resource: celtypes.MapType, accounts: celtypes.Value,) -> celtypes.Value:
+    """
+    Reach into C7n and make a get_snapshot_cross_account_violations() request using the current C7N filter.
+    """
+    accounts = C7N.filter.get_snapshot_cross_account_violations(resource, accounts)
+    return json_to_cel(accounts)
+
 def get_related_nat_gateways(resource: celtypes.MapType,) -> celtypes.Value:
     """
     Reach into C7N and make a get_related_nat_gateways() request using the current C7N filter.
@@ -1453,6 +1507,13 @@ DECLARATIONS: Dict[str, Annotation] = {
     "get_accounts": celtypes.FunctionType,
     "get_related_sgs": celtypes.FunctionType,
     "get_related_subnets": celtypes.FunctionType,
+    "get_cross_account_policies": celtypes.FunctionType,
+    "get_accounts_cross_account_access": celtypes.FunctionType,
+    "get_vpcs_cross_account_access": celtypes.FunctionType,
+    "get_vpces_cross_account_access": celtypes.FunctionType,
+    "get_orgid_cross_account_access": celtypes.FunctionType,
+    "get_ami_cross_account_violations": celtypes.FunctionType,
+    "get_snapshot_cross_account_violations": celtypes.FunctionType,
     "get_related_nat_gateways": celtypes.FunctionType,
     "get_related_igws": celtypes.FunctionType,
     "get_related_security_configs": celtypes.FunctionType,
@@ -1517,6 +1578,13 @@ FUNCTIONS: Dict[str, ExtFunction] = {
         get_accounts,
         get_related_sgs,
         get_related_subnets,
+        get_cross_account_policies,
+        get_accounts_cross_account_access,
+        get_vpcs_cross_account_access,
+        get_vpces_cross_account_access,
+        get_orgid_cross_account_access,
+        get_ami_cross_account_violations,
+        get_snapshot_cross_account_violations,
         get_related_nat_gateways,
         get_related_igws,
         get_related_security_configs,
