@@ -905,19 +905,21 @@ def get_orgid_cross_account_access(resource: celtypes.MapType, orgids: celtypes.
     return json_to_cel(orgids)
 
 
-def get_ami_cross_account_violations(resource: celtypes.MapType, accounts: celtypes.Value,) -> celtypes.Value:
+def get_protocols_cross_account_access(resource: celtypes.MapType, protocols: celtypes.Value,) -> celtypes.Value:
     """
-    Reach into C7n and make a get_ami_cross_account_violations() request using the current C7N filter.
+    Reach into C7N and make a get_protocols_cross_account_access() request using the current C7N filter.
     """
-    accounts = C7N.filter.get_ami_cross_account_violations(resource, accounts)
-    return json_to_cel(accounts)
+    orgids = C7N.filter.get_protocols_cross_account_access(resource, protocols)
+    return json_to_cel(protocols)
 
-def get_snapshot_cross_account_violations(resource: celtypes.MapType, accounts: celtypes.Value,) -> celtypes.Value:
+
+def get_endpoints_cross_account_access(resource: celtypes.MapType, endpoints: celtypes.Value,) -> celtypes.Value:
     """
-    Reach into C7n and make a get_snapshot_cross_account_violations() request using the current C7N filter.
+    Reach into C7N and make a get_endpoints_cross_account_access() request using the current C7N filter.
     """
-    accounts = C7N.filter.get_snapshot_cross_account_violations(resource, accounts)
-    return json_to_cel(accounts)
+    orgids = C7N.filter.get_endpoints_cross_account_access(resource, endpoints)
+    return json_to_cel(endpoints)
+
 
 def get_related_nat_gateways(resource: celtypes.MapType,) -> celtypes.Value:
     """
@@ -1512,8 +1514,8 @@ DECLARATIONS: Dict[str, Annotation] = {
     "get_vpcs_cross_account_access": celtypes.FunctionType,
     "get_vpces_cross_account_access": celtypes.FunctionType,
     "get_orgid_cross_account_access": celtypes.FunctionType,
-    "get_ami_cross_account_violations": celtypes.FunctionType,
-    "get_snapshot_cross_account_violations": celtypes.FunctionType,
+    "get_protocols_cross_account_access": celtypes.FunctionType,
+    "get_endpoints_cross_account_access": celtypes.FunctionType,
     "get_related_nat_gateways": celtypes.FunctionType,
     "get_related_igws": celtypes.FunctionType,
     "get_related_security_configs": celtypes.FunctionType,
@@ -1583,8 +1585,8 @@ FUNCTIONS: Dict[str, ExtFunction] = {
         get_vpcs_cross_account_access,
         get_vpces_cross_account_access,
         get_orgid_cross_account_access,
-        get_ami_cross_account_violations,
-        get_snapshot_cross_account_violations,
+        get_protocols_cross_account_access,
+        get_endpoints_cross_account_access,
         get_related_nat_gateways,
         get_related_igws,
         get_related_security_configs,
