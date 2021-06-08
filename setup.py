@@ -24,18 +24,20 @@ here = Path(__file__).parent
 
 setup(
     name="cel-python",
-    version='0.1',
+    version='0.1.4',
     description='Pure Python CEL Implementation',
+    license='Apache-2.0',
+    classifiers=['License :: OSI Approved :: Apache Software License'],
     long_description=(here/"README.rst").read_text(),
     long_description_content_type='text/x-rst',
     author='Cloud Custodian Project',
     author_email=None,
     maintainer=None,
     maintainer_email=None,
-    url='https://cel-python.io',
+    url='https://github.com/cloud-custodian/cel-python',
     packages=find_packages(where='src'),
     package_dir={'': 'src'},
     package_data={"celpy": ["*.lark"]},
     install_requires=(here/"requirements.txt").read_text().splitlines(),
-    python_requires='>=3.6, <4',
+    python_requires='>=3.7, <4',
 )
