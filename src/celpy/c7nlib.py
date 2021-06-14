@@ -909,7 +909,7 @@ def get_protocols_cross_account_access(resource: celtypes.MapType, protocols: ce
     """
     Reach into C7N and make a get_protocols_cross_account_access() request using the current C7N filter.
     """
-    orgids = C7N.filter.get_protocols_cross_account_access(resource, protocols)
+    protocols = C7N.filter.get_protocols_cross_account_access(resource, protocols)
     return json_to_cel(protocols)
 
 
@@ -917,7 +917,7 @@ def get_endpoints_cross_account_access(resource: celtypes.MapType, endpoints: ce
     """
     Reach into C7N and make a get_endpoints_cross_account_access() request using the current C7N filter.
     """
-    orgids = C7N.filter.get_endpoints_cross_account_access(resource, endpoints)
+    endpoints = C7N.filter.get_endpoints_cross_account_access(resource, endpoints)
     return json_to_cel(endpoints)
 
 def get_used_security_groups(resource: celtypes.MapType) -> celtypes.Value:
