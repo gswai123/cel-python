@@ -934,11 +934,18 @@ def get_unused_security_groups(resource: celtypes.MapType) -> celtypes.Value:
     unused_sgs = C7N.filter.get_unused_security_groups(resource)
     return json_to_cel(unused_sgs)
 
-def unused_image_filter(resource: celtypes.MapType, value: celtypes.MapType) -> celtypes.Value:
+def unused_image_filter(resource: celtypes.MapType) -> celtypes.Value:
     """
     Reach into C7N and make a unused_image_filter() request using the current C7N filter.
     """
-    images = C7N.filter.unused_image_filter(resource, value)
+    images = C7N.filter.unused_image_filter(resource)
+    return json_to_cel(images)
+
+def used_image_filter(resource: celtypes.MapType) -> celtypes.Value:
+    """
+    Reach into C7N and make a used_image_filter() request using the current C7N filter.
+    """
+    images = C7N.filter.used_image_filter(resource)
     return json_to_cel(images)
 
 def get_related_nat_gateways(resource: celtypes.MapType,) -> celtypes.Value:
@@ -1547,6 +1554,7 @@ DECLARATIONS: Dict[str, Annotation] = {
     "get_used_security_groups": celtypes.FunctionType,
     "get_unused_security_groups": celtypes.FunctionType,
     "unused_image_filter": celtypes.FunctionType,
+    "used_image_filter": celtypes.FunctionType,
     "get_related_nat_gateways": celtypes.FunctionType,
     "get_related_igws": celtypes.FunctionType,
     "get_related_security_configs": celtypes.FunctionType,
@@ -1622,6 +1630,7 @@ FUNCTIONS: Dict[str, ExtFunction] = {
         get_used_security_groups,
         get_unused_security_groups,
         unused_image_filter,
+        used_image_filter,
         get_related_nat_gateways,
         get_related_igws,
         get_related_security_configs,
